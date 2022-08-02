@@ -79,12 +79,11 @@ def getSoulProbs(souls):
 
     # Determine the good- bad- balance of the world.
     B = getBalance(souls)
-    print(B)
 
     # Work out the probabilities of each soul based on the good/bad-ness of the world.
     probs = soulProbsArr * exp(-B * PROB_PREFACTOR
                                * asarray([goodDict[soul] - GOOD_BALANCE for soul in soulTable], dtype=float))
-    print(probs)
+
     return probs / npSum(probs)  # Don't forget to normalise!
 
 
@@ -165,10 +164,10 @@ powrDict = {soul: 0.0 if soul == 'null' else powr / powrAvg for soul, powr in po
 # Define power values here.
 powrCommon = 1.0
 powrUncommon = 2.0
-powrRare = 4.0
-powrEpic = 8.0
-powrLegendary = 16.0
-powrMythical = 48.0
+powrRare = 6.0
+powrEpic = 18.0
+powrLegendary = 54.0
+powrMythical = 192.0
 
 powrCommons = [1.0] * 1
 powrUncommons = [1.0] * 5
