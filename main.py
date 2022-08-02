@@ -61,7 +61,7 @@ def main(rng, years: int = 100, pop: int = None, magic: Counter = None):
 
         print(f'ending year {year} with pop {population.getPop()}')  # ... {persons}')
 
-        #writeSummary(souls=population.getTotal(sort=True), index=year)
+        writeSummary(souls=population.getTotal(sort=True), index=year)
 
     writeSummary(souls=population.getTotal(sort=True), index=years)
 
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     RNG = default_rng(seed=None)
 
     with Profile() as pr:
-        main(rng=RNG, years=200, pop=500_000)
+        main(rng=RNG, years=2000, pop=1_000_000)
         '''magic=Counter({'water': 200_000,
                             'fire': 200_000,
                             'earth': 100_000,

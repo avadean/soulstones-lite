@@ -79,11 +79,12 @@ def getSoulProbs(souls):
 
     # Determine the good- bad- balance of the world.
     B = getBalance(souls)
+    print(B)
 
     # Work out the probabilities of each soul based on the good/bad-ness of the world.
     probs = soulProbsArr * exp(-B * PROB_PREFACTOR
                                * asarray([goodDict[soul] - GOOD_BALANCE for soul in soulTable], dtype=float))
-
+    print(probs)
     return probs / npSum(probs)  # Don't forget to normalise!
 
 
@@ -91,7 +92,7 @@ def getBalance(souls):
     """ Returns the magical state of the world based on
         the good- and bad- ness of the current souls. """
 
-    return sum(goodDict[soul] * powrDict[soul] * num for soul, num in souls.items()) / sum(souls.values())
+    return sum(goodDict[soul] * soulpowrsArr[n] * num for n, (soul, num) in enumerate(souls.items())) / sum(souls.values())
 
 
 # Rarity of souls.
@@ -131,7 +132,7 @@ soulProbs = probCommons \
             + probUncommons \
             + probRares \
             + probEpics \
-            + probLegendaries  # \
+            + probLegendaries #\
             #+ probMythicals
 
 # Compile souls together.
@@ -139,7 +140,7 @@ soulTable = commons\
             + uncommons\
             + rares\
             + epics\
-            + legendaries#\
+            + legendaries #\
             #+ mythicals
 
 soulProbsArr = asarray(soulProbs, dtype=float)
@@ -147,13 +148,50 @@ soulProbsArr = asarray(soulProbs, dtype=float)
 # Soul dictionary from Excel file.
 soulDict = getExcel(souls=soulTable, path=PATH, cellRange=GRIDCELLS, gridName=GRIDNAME, type_='souls')
 goodDict = getExcel(souls=soulTable, path=PATH, cellRange=GOODCELLS, gridName=GOODNAME, type_='goods')
-powrDict = getExcel(souls=soulTable, path=PATH, cellRange=POWRCELLS, gridName=POWRNAME, type_='powers')
+#powrDict = getExcel(souls=soulTable, path=PATH, cellRange=POWRCELLS, gridName=POWRNAME, type_='powers')
 
 # Shift good values.
 goodDict = {soul: good - GOOD_BALANCE for soul, good in goodDict.items()}
 
+# Force nulls to be exactly the desired GOOD_BALANCE.
+goodDict['null'] = 0.0
+
+'''
 # Average power values.
 powrAvg = sum(powrDict.values()) / len(powrDict)
-powrDict = {soul: powr / powrAvg for soul, powr in powrDict.items()}
+powrDict = {soul: 0.0 if soul == 'null' else powr / powrAvg for soul, powr in powrDict.items()}
+'''
+
+# Define power values here.
+powrCommon = 1.0
+powrUncommon = 2.0
+powrRare = 4.0
+powrEpic = 8.0
+powrLegendary = 16.0
+powrMythical = 48.0
+
+powrCommons = [1.0] * 1
+powrUncommons = [1.0] * 5
+powrRares = [1.0] * 5
+powrEpics = [1.0] * 8
+powrLegendaries = [1.0] * 6
+powrMythicals = [1.0] * 6
+
+powrCommons = [p * powrCommon for p in powrCommons]
+powrUncommons = [p * powrUncommon for p in powrUncommons]
+powrRares = [p * powrRare for p in powrRares]
+powrEpics = [p * powrEpic for p in powrEpics]
+powrLegendaries = [p * powrLegendary for p in powrLegendaries]
+powrMythicals = [p * powrMythical for p in powrMythicals]
+
+soulPowrs = powrCommons \
+            + powrUncommons \
+            + powrRares \
+            + powrEpics \
+            + powrLegendaries #\
+            #+ powrMythicals
+
+soulpowrsArr = asarray(soulPowrs, dtype=float)
+
 
 writeSoulDict(soulDict)

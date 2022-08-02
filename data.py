@@ -12,8 +12,8 @@ deathProbs = INIT_CHANCE_DEATH * exp(EXPO_CHANCE_DEATH * arange(MAX_AGE + 50)) #
 MIN_CHILD_AGE = 18
 MAX_CHILD_AGE = 45
 
-GOOD_BALANCE = 8.0
-PROB_PREFACTOR = 1.0
+GOOD_BALANCE = 9
+PROB_PREFACTOR = 35.0
 
 
 def createAges(rng, num: int, minAge: int = 0, maxAge: int = 100):
